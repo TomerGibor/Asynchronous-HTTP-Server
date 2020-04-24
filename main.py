@@ -1,4 +1,3 @@
-#Main file
 """
 Asynchronous HTTP Server
 """
