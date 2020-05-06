@@ -5,6 +5,7 @@ Module to send HTTP response.
 import asyncio
 from dataclasses import dataclass
 from typing import List
+from http import HTTPStatus
 
 
 CONTENT_TYPES = {
@@ -26,17 +27,17 @@ def send_file_response(path: str, http_version: str, transport: asyncio.Transpor
     """
     
     file_type = path.split('.')[-1].upper()
-    ok_response_line = ResponseLineHeader(http_version, 200, "OK")
+    ok_response_line = ResponseLineHeader(http_version, HTTPStatus.OK, HTTPStatus.OK.phrase)
     response_headers = HTTPResponseHeaders(ok_response_line, list())
     try:
         with open(path, 'rb' if file_type in IMAGE_FILES else 'r') as f:
             body = f.read()
     except FileNotFoundError:
-        print(f"Invalid client GET Request - File not found: {path.split('/')[-1]}")
+        print(f'Invalid client GET Request - File not found: {path.split("/")[-1]}')
         response_headers.response_line_header = ResponseLineHeader(
-            http_version, 404, "Not Found")
+            http_version, HTTPStatus.NOT_FOUND, HTTPStatus.NOT_FOUND.phrase)
         body = INVALID_RESPONSE_HTML
-        file_type = "HTML"
+        file_type = 'HTML'
     if file_type not in IMAGE_FILES:
         response_headers.headers.append(HTTPHeader('Charset', 'utf-8'))
     response_headers.headers.append(HTTPHeader('Content-Type',
@@ -163,4 +164,4 @@ class HTTPImageResponse(HTTPResponse):
 
     def __bytes__(self):
         """Deserialize and encode the image response to be sent to client."""
-        return (str(self.response_headers) + "\r\n").encode() + bytes(self.body)
+        return (str(self.response_headers) + '\r\n').encode() + bytes(self.body)
