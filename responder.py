@@ -8,13 +8,13 @@ from typing import List
 
 
 CONTENT_TYPES = {
-    "HTML": "text\html",
-    "CSS": "text\css",
-    "PNG": "image\png",
-    "PHP": "text\php"
+    'HTML': 'text\html',
+    'CSS': 'text\css',
+    'PNG': 'image\png',
+    'PHP': 'text\php'
 }
-IMAGE_FILES = ("PNG", "JPEG", "JPG")
-INVALID_RESPONSE_HTML = "<html><body><h1> Invalid Client Request</h1></body></html>"
+IMAGE_FILES = ('PNG', 'JPEG', 'JPG')
+INVALID_RESPONSE_HTML = '<html><body><h1> Invalid Client Request</h1></body></html>'
 
 
 def send_file_response(path: str, http_version: str, transport: asyncio.Transport) -> None:
@@ -25,11 +25,11 @@ def send_file_response(path: str, http_version: str, transport: asyncio.Transpor
     :param transport: The async object representing the connection with client.
     """
     
-    file_type = path.split(".")[-1].upper()
+    file_type = path.split('.')[-1].upper()
     ok_response_line = ResponseLineHeader(http_version, 200, "OK")
     response_headers = HTTPResponseHeaders(ok_response_line, list())
     try:
-        with open(path, "rb" if file_type in IMAGE_FILES else "r") as f:
+        with open(path, 'rb' if file_type in IMAGE_FILES else 'r') as f:
             body = f.read()
     except FileNotFoundError:
         print(f"Invalid client GET Request - File not found: {path.split('/')[-1]}")
