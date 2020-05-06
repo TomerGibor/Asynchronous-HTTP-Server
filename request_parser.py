@@ -25,8 +25,6 @@ def parse_request(request: bytes) -> RequestLineHeader:
     request = request.decode("ascii")
     split_request = request.split("\r\n")
     method, path, http_version = split_request[0].split(" ")
-    if path == "favicon.ico":
-        path = "favicon.png"
     path = ROOT_DIR + ("index.html" if path == "/" else path[1:])
     args = split_request[-1] if method == "POST" else ""
 
