@@ -21,9 +21,9 @@ def handle_request(request_line_header: RequestLineHeader,
     }
     try:
         method = methods[request_line_header.method]
-    except Exception:
+    except KeyError:
         raise UnsupportedMethodError(
-            f'Method {request_line_header.method} is unsupported')
+            f'Method {request_line_header.method} is unsupported') from None
     method(request_line_header, transport, *args)
 
 
