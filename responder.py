@@ -7,7 +7,6 @@ from dataclasses import dataclass
 from typing import List
 from http import HTTPStatus
 
-
 CONTENT_TYPES = {
     'HTML': 'text\html',
     'CSS': 'text\css',
@@ -18,14 +17,18 @@ IMAGE_FILES = ('PNG', 'JPEG', 'JPG')
 INVALID_RESPONSE_HTML = '<html><body><h1> Invalid Client Request</h1></body></html>'
 
 
-def send_file_response(path: str, http_version: str, transport: asyncio.Transport) -> None:
+def send_file_response(path: str, http_version: str,
+                       transport: asyncio.Transport) -> None:
     """
-    Method to send file response to client.
-    :param path: Path of the file requested by client.
-    :param http_version: HTTP version.
-    :param transport: The async object representing the connection with client.
+    Function used to send encoded file HTTP response on transport.
+
+    Args:
+        path: Path of the file requested by client.
+        http_version: HTTP version.
+        transport: The async object representing the connection with client.
+
     """
-    
+
     file_type = path.split('.')[-1].upper()
     ok_response_line = ResponseLineHeader(http_version, HTTPStatus.OK, HTTPStatus.OK.phrase)
     response_headers = HTTPResponseHeaders(ok_response_line, list())
@@ -50,10 +53,16 @@ def send_file_response(path: str, http_version: str, transport: asyncio.Transpor
 
 def _get_response(file_type: str, response_headers, body) -> bytes:
     """
-    :param file_type: The type of file requested by client.
-    :param response_headers: HTTP response headers of type HTTPResponseHeaders.
-    :param body: Body of the response.
-    :return Encoded HTTP response
+    Function to create and return encoded HTTP response given
+      response headers and body.
+
+    Args:
+        file_type: The type of file requested by client.
+        response_headers: HTTP response headers.
+        body: Body of the response.
+
+    Returns:
+        Encoded HTTP response.
     """
 
     return bytes(HTTPTextResponse(response_headers, body)) \
@@ -93,7 +102,7 @@ class HTTPResponseHeaders:
     headers: List[HTTPHeader]
 
     def __str__(self):
-        """Deserializing the response headers."""
+        """Deserialization of the response headers."""
         deserialized_headers = str(self.response_line_header) + "\r\n"
         for http_header in self.headers:
             if http_header:
